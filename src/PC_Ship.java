@@ -2,6 +2,10 @@ public class PC_Ship extends Ship{
     public PC_Ship(int x, int y, FieldGame fieldGame) {
         super(x, y, fieldGame);
     }
+
+    public void pcMove() {
+        //метод передвижения компьютера
+    }
     @Override
     public String toString() {
         //переопределение toString для вывода корабля

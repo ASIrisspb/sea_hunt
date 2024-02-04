@@ -84,6 +84,7 @@ public class Main {
             }
 
             fieldGame.printField();  //рисуем поле
+
             System.out.println(menuMove); //выводим меню действий
             userWord = reader.readLine();
             //определяем действие игрока
