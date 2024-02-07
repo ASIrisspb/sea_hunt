@@ -13,7 +13,8 @@ import java.util.ArrayList;
 public class Main {
     static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     static String userWord; //для ввода пользователем
-    static String menuMove = "Сделайте свой ход, выбрав пункт меню: 1 - вправо, 2 - влево, 3 - вверх, 4 - вниз";
+    static String menuMove = "Сделайте свой ход, выбрав пункт меню: " +
+            "1 - вправо, 2 - влево, 3 - вверх, 4 - вниз ";
     static boolean isLoop = true; //для возможных циклов
     static int minRangeField = 10; //минимальный размер поля
     static int maxRangeField = 20; //максимальный размер поля
@@ -82,9 +83,7 @@ public class Main {
                     lootbox_list.add(new Lootbox(fieldGame));
                 }
             }
-
             fieldGame.printField();  //рисуем поле
-
             System.out.println(menuMove); //выводим меню действий
             userWord = reader.readLine();
             //определяем действие игрока
@@ -97,14 +96,12 @@ public class Main {
             //после действия игрока проверяем лутбоксы на предмет использования
             checkLootbox();
 
-
+            //действия компьютера
+            enemy.pcMove();
+            //после хода компьютера проверяем лутбоксы на предмет использования
+            checkLootbox();
 
             //метод отрисовки запущенных торпед
-
-            //действия компьютера
-
-            //после хода компьютера проверяем лутбоксы на предмет использования
-//            checkLootbox();
 
             //проверка окончания игры!!!
             if (!ourShip.isAlive() && !enemy.isAlive()) {

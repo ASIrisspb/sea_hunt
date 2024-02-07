@@ -1,4 +1,4 @@
-public class Ship {
+public abstract class Ship {
     //общий класс кораблей
     private int x; //координата корабля
     private int y; //координата корабля
@@ -14,6 +14,7 @@ public class Ship {
         this.getFieldGame().getField()[x][y].setObject(this); //ставим корабль
         // то есть назначаем текущей клетке наличие объекта.
     }
+    abstract public void shipMove(String userWord);
     public boolean isAlive() {
         return alive;
     }

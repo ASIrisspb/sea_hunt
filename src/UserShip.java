@@ -12,6 +12,7 @@ public class UserShip extends Ship{
             return " ⩲ ";
         }
     }
+    @Override
     public void shipMove(String userWord) {
         //метод передвижения корабля
         //сначала "снимаем" корабль с клетки

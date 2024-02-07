@@ -3,9 +3,6 @@ public class PC_Ship extends Ship{
         super(x, y, fieldGame);
     }
 
-    public void pcMove() {
-        //метод передвижения компьютера
-    }
     @Override
     public String toString() {
         //переопределение toString для вывода корабля
@@ -14,5 +11,10 @@ public class PC_Ship extends Ship{
         } else {
             return " ⩲ ";
         }
+    }
+
+    @Override
+    public void shipMove(String userWord) {
+
     }
 }
