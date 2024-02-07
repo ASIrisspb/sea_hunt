@@ -14,7 +14,8 @@ public class Main {
     static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     static String userWord; //для ввода пользователем
     static String menuMove = "Сделайте свой ход, выбрав пункт меню: " +
-            "1 - вправо, 2 - влево, 3 - вверх, 4 - вниз ";
+            "1 - вправо, 2 - влево, 3 - вверх, 4 - вниз \n" +
+            "Либо выпусти торпеду, отправив ее: 5 - вправо, 6 - влево, 7 - вверх, 8 - вниз";
     static boolean isLoop = true; //для возможных циклов
     static int minRangeField = 10; //минимальный размер поля
     static int maxRangeField = 20; //максимальный размер поля
@@ -30,20 +31,20 @@ public class Main {
                 Чтобы получить бонус - наступи на лутбок, но если ты наступишь на врага - вы оба погибните""");
 
         //выбор размера поля
-        while (isLoop) {
-            System.out.printf("Напиши размер поля (от %d до %d) \n",
-                    minRangeField, maxRangeField);
-            userWord = reader.readLine();
-            for (int i = minRangeField; i <= maxRangeField ; i++) {
-                if (userWord.equals(String.valueOf(i))) {
-                    isLoop = false;
-                    range = i;
-                    break;
-                }
-            }
-            if (isLoop) System.out.printf("Нужно написать число от %d до %d\n",
-                    minRangeField, maxRangeField);
-        }
+//        while (isLoop) {
+//            System.out.printf("Напиши размер поля (от %d до %d) \n",
+//                    minRangeField, maxRangeField);
+//            userWord = reader.readLine();
+//            for (int i = minRangeField; i <= maxRangeField ; i++) {
+//                if (userWord.equals(String.valueOf(i))) {
+//                    isLoop = false;
+//                    range = i;
+//                    break;
+//                }
+//            }
+//            if (isLoop) System.out.printf("Нужно написать число от %d до %d\n",
+//                    minRangeField, maxRangeField);
+//        }
 
         //создаем поле заданного размера
         FieldGame fieldGame = new FieldGame(range);
@@ -63,7 +64,7 @@ public class Main {
         PC_Ship enemy = new PC_Ship(enemyX_initial,enemyY_initial, fieldGame);
 
         //создаем комплект снарядов нашего корабля
-
+        Missle missle = null;
         //создаем комплект снарядов врага
 
 
@@ -89,7 +90,10 @@ public class Main {
             //определяем действие игрока
             switch (userWord) {
                 case "1","2","3","4" -> ourShip.shipMove(userWord); //метод передвижения корабля
-                case "5","6","7","8" -> {}  //метод запуска торпеды
+                case "5","6","7","8" -> {
+                    missle = new Missle(fieldGame, ourShip.getX(), 
+                            ourShip.getY(), userWord);
+                }  //метод запуска торпеды
                 //страховка от глупости игрока
                 default -> System.out.println("Недопустимое действие! Вы потеряли свой ход");
             }
@@ -97,11 +101,14 @@ public class Main {
             checkLootbox();
 
             //действия компьютера
-            enemy.pcMove();
+            enemy.shipMove("");
             //после хода компьютера проверяем лутбоксы на предмет использования
             checkLootbox();
 
             //метод отрисовки запущенных торпед
+            if (missle != null) {
+                missle.missleMove();
+            }
 
             //проверка окончания игры!!!
             if (!ourShip.isAlive() && !enemy.isAlive()) {
