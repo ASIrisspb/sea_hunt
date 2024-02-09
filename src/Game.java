@@ -10,7 +10,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-public class Main {
+public class Game {
     static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     static String userWord; //для ввода пользователем
     static String menuMove = "Сделайте свой ход, выбрав пункт меню: " +
@@ -19,6 +19,7 @@ public class Main {
     static boolean isLoop = true; //для возможных циклов
     static int minRangeField = 10; //минимальный размер поля
     static int maxRangeField = 20; //максимальный размер поля
+    static FieldGame fieldGame;
     static int range = 10; //размерность поля от пользователя
     static ArrayList<Lootbox> lootbox_list = new ArrayList<>(); //набор (список) лутбоксов
     public static void main(String[] args) throws IOException {
@@ -47,13 +48,13 @@ public class Main {
 //        }
 
         //создаем поле заданного размера
-        FieldGame fieldGame = new FieldGame(range);
+        fieldGame = new FieldGame(range);
 
         //определяем случайные координаты нашего корабля в 1-й четверти поля
         int ourX_initial = (int) (Math.random()* (range / 2));
         int ourY_initial = (int) (Math.random()* (range / 2));
         //создаем наш корабль
-        UserShip ourShip = new UserShip(ourX_initial,ourY_initial, fieldGame);
+        UserShip ourShip = new UserShip(ourX_initial,ourY_initial);
         //включаем нашему кораблю обзор заданного размера
         ourShip.view(true);
 
@@ -61,7 +62,7 @@ public class Main {
         int enemyX_initial = (int) (Math.random()* (range / 2) + (range / 2));
         int enemyY_initial = (int) (Math.random()* (range / 2) + (range / 2));
         //создаем врага
-        PC_Ship enemy = new PC_Ship(enemyX_initial,enemyY_initial, fieldGame);
+        PC_Ship enemy = new PC_Ship(enemyX_initial,enemyY_initial);
 
         //создаем комплект снарядов нашего корабля
         Missle missle = null;
@@ -81,7 +82,7 @@ public class Main {
                 for (int i = lootbox_list.size(); i < count_lootbox; i++) {
 //ВАЖНО! в конструкторе лутбокса есть цикл, если игра зависла,
 // то возможно причина в том, что не может найти место для лутбокса
-                    lootbox_list.add(new Lootbox(fieldGame));
+                    lootbox_list.add(new Lootbox());
                 }
             }
             fieldGame.printField();  //рисуем поле
@@ -91,7 +92,7 @@ public class Main {
             switch (userWord) {
                 case "1","2","3","4" -> ourShip.shipMove(userWord); //метод передвижения корабля
                 case "5","6","7","8" -> {
-                    missle = new Missle(fieldGame, ourShip.getX(), 
+                    missle = new Missle(ourShip.getX(),
                             ourShip.getY(), userWord);
                 }  //метод запуска торпеды
                 //страховка от глупости игрока

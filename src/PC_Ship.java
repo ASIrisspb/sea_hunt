@@ -1,6 +1,6 @@
 public class PC_Ship extends Ship{
-    public PC_Ship(int x, int y, FieldGame fieldGame) {
-        super(x, y, fieldGame);
+    public PC_Ship(int x, int y) {
+        super(x, y);
     }
 
     @Override

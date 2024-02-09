@@ -1,6 +1,6 @@
 public class UserShip extends Ship{
-    public UserShip(int x, int y, FieldGame fieldGame) {
-        super(x, y, fieldGame);
+    public UserShip(int x, int y) {
+        super(x, y);
     }
     @Override
     public String toString() {
@@ -22,7 +22,7 @@ public class UserShip extends Ship{
         //теперь меняем координату, если это возможно
         switch (userWord) {
             case "1" -> {
-                if (this.getY() + 1 >= this.getFieldGame().getRange())
+                if (this.getY() + 1 >= Game.fieldGame.getRange())
                     System.out.println("Недопустимый ход! Нельзя выйти за края поля");
                 else this.setY(this.getY() + 1);
             }
@@ -37,7 +37,7 @@ public class UserShip extends Ship{
                 else this.setX(this.getX() - 1);
             }
             case "4" -> {
-                if (this.getX() + 1 >= this.getFieldGame().getRange())
+                if (this.getX() + 1 >= Game.fieldGame.getRange())
                     System.out.println("Недопустимый ход! Нельзя выйти за края поля");
                 else this.setX(this.getX() + 1);
             }
@@ -50,7 +50,7 @@ public class UserShip extends Ship{
     public void actionByCell(int x, int y, Object obj, boolean visible) {
         //метод действия на клетке
         //получаем объект, связанный с клеткой
-        Object object = this.getFieldGame().getField()[x][y].getObject();
+        Object object = Game.fieldGame.getField()[x][y].getObject();
         //если не нул, то там есть объект
         if (object != null) {
             //если это лутбокс, то "забираем" его
@@ -60,7 +60,7 @@ public class UserShip extends Ship{
             //если там корабль врага, то оба погибают
             if (object instanceof PC_Ship) {
                 //открываем все поле
-                this.setVisibleArea(this.getFieldGame().getRange());
+                this.setVisibleArea(Game.fieldGame.getRange());
                 //помечаем наш корабль потопленным
                 this.setAlive(false);
                 //помечаем корабль врага также потопленным
@@ -68,18 +68,18 @@ public class UserShip extends Ship{
             }
         }
         //метод постановки корабля на клетку или его снятия с неё
-        this.getFieldGame().getField()[x][y].setObject(obj); //объект или null
-        this.getFieldGame().getField()[x][y].setVisible(visible); //видимость
+        Game.fieldGame.getField()[x][y].setObject(obj); //объект или null
+        Game.fieldGame.getField()[x][y].setVisible(visible); //видимость
     }
     public void view (boolean isView) {
         //метод обзора вокруг корабля (только для пользователя)
         for (int i = this.getX() - this.getVisibleArea(); i <= this.getX() + getVisibleArea(); i++) {
             for (int j = this.getY() - this.getVisibleArea(); j <= this.getY() + this.getVisibleArea(); j++) {
                 //перебираем все клетки в заданном радиусе и устанавливаем им видимость
-                if (i >= 0 && i < this.getFieldGame().getRange() && j >= 0
-                        && j < this.getFieldGame().getRange()) {
+                if (i >= 0 && i < Game.fieldGame.getRange() && j >= 0
+                        && j < Game.fieldGame.getRange()) {
                     //не выходим за пределы поля!!
-                    this.getFieldGame().getField()[i][j].setVisible(isView);
+                    Game.fieldGame.getField()[i][j].setVisible(isView);
                 }
             }
         }
