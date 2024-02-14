@@ -1,10 +1,10 @@
 public class Missle {
     //класс для реализации торпед
-private static int speed = 2; //Скорость торпеды. В нашем случае это количество клеток, занимаемых торпедой при движении
+private static int speed = 3; //Скорость торпеды. В нашем случае это количество клеток, занимаемых торпедой при движении
 private int[] x; //координаты торпеды
 private int[] y; //координаты торпеды
 private boolean alive; //маркер жизни торпеды, чтобы было можно её удалять в мейне
-private String direction; //определитель направления движения
+private final String direction; //определитель направления движения
     public Missle(int x, int y, String direction) {
         this.direction = direction;
         this.x = new int[speed]; //создаем массив в зависимости от скорости торпеды на текущий момент
@@ -19,19 +19,33 @@ private String direction; //определитель направления дв
 
         //скорость движения торпеды реализуем через цикл -
         for (int i = 0; i < this.x.length; i++) {
-            if (x[i] >= 0 && x[i] < rangeField && y[i] >= 0 && y[i] < rangeField) {
-                if (!(Game.fieldGame.getField()[x[i]][y[i]].getObject() instanceof UserShip)) {
-                    Game.fieldGame.getField()[x[i]][y[i]].setObject(null);
+
+            switch (direction) {
+                case "5" -> {
+                    y[i] = y[0] + 1;
+                    x[i] = x[0];
+                }
+                case "6" -> {
+                    y[i] = y[0] - 1;
+                    x[i] = x[0];
+                }
+                case "7" -> {
+                    x[i] = x[0] - 1;
+                    y[i] = y[0];
+                }
+                case "8" -> {
+                    x[i] = x[0] + 1;
+                    y[i] = y[0];
                 }
             }
-            switch (direction) {
-                case "5" -> y[i] = y[0] + i + 1;
-                case "6" -> y[i] = y[0] - i - 1;
-                case "7" -> x[i] = x[0] - i - 1;
-                case "8" -> x[i] = x[0] + i + 1;
-            }
             if (x[i] >= 0 && x[i] < rangeField && y[i] >= 0 && y[i] < rangeField) {
-                Game.fieldGame.getField()[x[i]][y[i]].setObject(this);
+                if (!(Game.fieldGame.getField()[x[i]][y[i]].getObject() instanceof UserShip)) {
+//                    System.out.println("null!! x["+i+"] = " + x[i] + ", y["+i+"] = " + y[i]);
+//                    Game.fieldGame.getField()[x[i]][y[i]].setObject(null);
+                    Game.fieldGame.getField()[x[i]][y[i]].setObject(this);
+//                } else {
+//                    System.out.println("object!! x["+i+"] = " + x[i] + ", y["+i+"] = " + y[i]);
+                }
             }
 
         }

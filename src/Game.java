@@ -21,6 +21,7 @@ public class Game {
     static int maxRangeField = 20; //максимальный размер поля
     static FieldGame fieldGame;
     static int range = 10; //размерность поля от пользователя
+    static int amountMissle = 10; //изначальное количество торпед
     static ArrayList<Lootbox> lootbox_list = new ArrayList<>(); //набор (список) лутбоксов
     public static void main(String[] args) throws IOException {
         //вступление и описание
@@ -65,7 +66,11 @@ public class Game {
         PC_Ship enemy = new PC_Ship(enemyX_initial,enemyY_initial);
 
         //создаем комплект снарядов нашего корабля
-        Missle missle = null;
+        ArrayList<Missle> missles_list = new ArrayList<>(amountMissle);
+        for (int i = 0; i < amountMissle; i++) {
+            missles_list.add(null);
+        }
+//        Missle missle = null;
         //создаем комплект снарядов врага
 
 
@@ -92,9 +97,16 @@ public class Game {
             switch (userWord) {
                 case "1","2","3","4" -> ourShip.shipMove(userWord); //метод передвижения корабля
                 case "5","6","7","8" -> {
-                    missle = new Missle(ourShip.getX(),
-                            ourShip.getY(), userWord);
-                }  //метод запуска торпеды
+                    //метод запуска торпеды
+                    for (int i = 0; i < amountMissle; i++) {
+                        if (missles_list.get(i) == null) {
+                            missles_list.set(i, new Missle(ourShip.getX(), ourShip.getY(), userWord));
+                            break;
+                        }
+                    }
+
+
+                }
                 //страховка от глупости игрока
                 default -> System.out.println("Недопустимое действие! Вы потеряли свой ход");
             }
@@ -107,8 +119,10 @@ public class Game {
             checkLootbox();
 
             //метод отрисовки запущенных торпед
-            if (missle != null) {
-                missle.missleMove();
+            for (int i = 0; i < missles_list.size(); i++) {
+                if (missles_list.get(i) != null) {
+                    missles_list.get(i).missleMove();
+                }
             }
 
             //проверка окончания игры!!!

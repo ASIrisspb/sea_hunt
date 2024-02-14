@@ -3,7 +3,7 @@ public abstract class Ship {
     private int x; //координата корабля
     private int y; //координата корабля
     private boolean alive; //флаг для контроля жизни корабля
-    private int visibleArea = 2; //начальная зона видимости (меняется лутбоксами)
+    private int visibleArea = 10; //начальная зона видимости (меняется лутбоксами)
     public Ship(int x, int y) {
         alive = true;
         this.x = x; //начальная координата корабля
