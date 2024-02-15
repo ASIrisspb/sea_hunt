@@ -53,11 +53,25 @@ public class Lootbox {
     }
     public void getGift(Ship ship) {
         //метод получения кораблем содержимого лутбокса (подарка)
-        //пока только для увеличения обзора!!!
-        ship.setVisibleArea(ship.getVisibleArea() + rate);
-        alive = false;
+        alive = false; //пометка, что не живой (использован)
+        switch ((int) (Math.random() * 2)) {
+            case 0 -> {
+                ship.setVisibleArea(ship.getVisibleArea() + rate);
+                System.out.println("Лутбокс принес вам увеличение обзора на " + rate);
+            }
+            case 1 -> {
+                ship.setSpeedMissiles(rate);
+                System.out.println("Лутбокс принес вам увеличение скорости торпед на " + rate);
+            }
+        }
     }
     public boolean isAlive() {
         return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        //сеттер маркера жизни лутбокса. Если торпеда попала в лутбокс, она его уничтожает
+        //точнее делает пометку, что не живой
+        this.alive = false;
     }
 }

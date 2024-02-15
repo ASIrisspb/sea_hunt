@@ -23,22 +23,22 @@ public class UserShip extends Ship{
         switch (userWord) {
             case "1" -> {
                 if (this.getY() + 1 >= Game.fieldGame.getRange())
-                    System.out.println("Недопустимый ход! Нельзя выйти за края поля");
+                    System.out.println("Недопустимый ход! Нельзя выйти за края поля. Ход потерян");
                 else this.setY(this.getY() + 1);
             }
             case "2" -> {
                 if (this.getY() - 1 < 0)
-                    System.out.println("Недопустимый ход! Нельзя выйти за края поля");
+                    System.out.println("Недопустимый ход! Нельзя выйти за края поля. Ход потерян");
                 else this.setY(this.getY() - 1);
             }
             case "3" -> {
                 if (this.getX() - 1 < 0)
-                    System.out.println("Недопустимый ход! Нельзя выйти за края поля");
+                    System.out.println("Недопустимый ход! Нельзя выйти за края поля. Ход потерян");
                 else this.setX(this.getX() - 1);
             }
             case "4" -> {
                 if (this.getX() + 1 >= Game.fieldGame.getRange())
-                    System.out.println("Недопустимый ход! Нельзя выйти за края поля");
+                    System.out.println("Недопустимый ход! Нельзя выйти за края поля. Ход потерян");
                 else this.setX(this.getX() + 1);
             }
         }

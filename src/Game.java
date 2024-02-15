@@ -20,8 +20,7 @@ public class Game {
     static int minRangeField = 10; //минимальный размер поля
     static int maxRangeField = 20; //максимальный размер поля
     static FieldGame fieldGame;
-    static int range = 10; //размерность поля от пользователя
-    static int amountMissle = 10; //изначальное количество торпед
+    static int range = 14; //размерность поля от пользователя
     static ArrayList<Lootbox> lootbox_list = new ArrayList<>(); //набор (список) лутбоксов
     public static void main(String[] args) throws IOException {
         //вступление и описание
@@ -65,15 +64,6 @@ public class Game {
         //создаем врага
         PC_Ship enemy = new PC_Ship(enemyX_initial,enemyY_initial);
 
-        //создаем комплект снарядов нашего корабля
-        ArrayList<Missle> missles_list = new ArrayList<>(amountMissle);
-        for (int i = 0; i < amountMissle; i++) {
-            missles_list.add(null);
-        }
-//        Missle missle = null;
-        //создаем комплект снарядов врага
-
-
         //определяем количество лутбоксов
         int count_lootbox = (int) (Math.pow(range, 2) /
                  (Math.pow(Lootbox.getDensity() * 2 + 1, 2)));
@@ -82,6 +72,7 @@ public class Game {
 
         //игровой цикл
         while (true) {
+            //проверяем количество лутбоксов на поле
             if (lootbox_list.size() < count_lootbox) {
                 //заполняем список лутбоксов, если их меньше заданного числа
                 for (int i = lootbox_list.size(); i < count_lootbox; i++) {
@@ -90,44 +81,34 @@ public class Game {
                     lootbox_list.add(new Lootbox());
                 }
             }
-            fieldGame.printField();  //рисуем поле
+            fieldGame.printField();  //рисуем поле (перед ходом игрока)
             System.out.println(menuMove); //выводим меню действий
             userWord = reader.readLine();
             //определяем действие игрока
             switch (userWord) {
                 case "1","2","3","4" -> ourShip.shipMove(userWord); //метод передвижения корабля
-                case "5","6","7","8" -> {
-                    //метод запуска торпеды
-                    for (int i = 0; i < amountMissle; i++) {
-                        if (missles_list.get(i) == null) {
-                            missles_list.set(i, new Missle(ourShip.getX(), ourShip.getY(), userWord));
-                            break;
-                        }
-                    }
-
-
-                }
+                case "5","6","7","8" -> ourShip.pushMissile(userWord); //метод запуска торпед
                 //страховка от глупости игрока
-                default -> System.out.println("Недопустимое действие! Вы потеряли свой ход");
+                default -> System.out.println("Неверный ход! Вы потеряли свой ход и остались на месте");
             }
+            //метод отрисовки запущенных торпед
+            ourShip.missileTrack();
             //после действия игрока проверяем лутбоксы на предмет использования
             checkLootbox();
 
-            //действия компьютера
+/**ДЕЙСТВИЯ КОМПЬЮТЕРА**/
+
+            //после пользователя делает ход компьютер
             enemy.shipMove("");
+            //метод отрисовки запущенных торпед
+            enemy.missileTrack();
             //после хода компьютера проверяем лутбоксы на предмет использования
             checkLootbox();
 
-            //метод отрисовки запущенных торпед
-            for (int i = 0; i < missles_list.size(); i++) {
-                if (missles_list.get(i) != null) {
-                    missles_list.get(i).missleMove();
-                }
-            }
 
-            //проверка окончания игры!!!
+            /** Проверка окончания игры!!!**/
             if (!ourShip.isAlive() && !enemy.isAlive()) {
-                System.out.println("Произошло столкновение кораблей - оба погибли");
+                System.out.println("Ничья - оба погибли");
                 break;
             }
             if (!ourShip.isAlive()) {
@@ -138,18 +119,22 @@ public class Game {
                 System.out.println("Поздравляем! Вы победили - враг потоплен!");
                 break;
             }
-
         }
-        fieldGame.printField();  //рисуем поле
+        fieldGame.printField();  //рисуем поле, чтобы нарисовать его в самом конце игры
     }
+
+
     private static void checkLootbox() {
+        //метод проверки количества лутбоксов на поле
         for (int i = 0; i < lootbox_list.size(); i++) {
             //проходим по списку и смотрим у каждого маркер
             if (!lootbox_list.get(i).isAlive()) {
                 //если лутбокс был использован, то маркер станет false
                 lootbox_list.remove(lootbox_list.get(i));
                 //тогда удаляем из списка и прекращаем перебор,
-                // так как за один ход игрок (PC) мог использовать только один лутбокс
+                // так как за один ход игрок (или PC) мог использовать только один лутбокс
+                System.out.println("Был использован (или потоплен) лутбокс, " +
+                        "в новом месте на поле появился новый");
                 break;
             }
         }
