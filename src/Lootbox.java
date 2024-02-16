@@ -41,9 +41,6 @@ public class Lootbox {
         }
         return acceptable;
     }
-    public int getRate() {
-        return rate;
-    }
     public static int getDensity() {
         return density;
     }
@@ -55,23 +52,28 @@ public class Lootbox {
         //метод получения кораблем содержимого лутбокса (подарка)
         alive = false; //пометка, что не живой (использован)
         switch ((int) (Math.random() * 2)) {
+            //добавляем кораблю обзор
             case 0 -> {
                 ship.setVisibleArea(ship.getVisibleArea() + rate);
                 System.out.println("Лутбокс принес вам увеличение обзора на " + rate);
             }
+            //увеличиваем скорость торпеды
             case 1 -> {
                 ship.setSpeedMissiles(rate);
                 System.out.println("Лутбокс принес вам увеличение скорости торпед на " + rate);
+            }
+            case 2 -> {
+                ship.setCurrentMissile(-rate);
+                System.out.println("Лутбокс принес вам увеличение количества торпед на " + rate);
             }
         }
     }
     public boolean isAlive() {
         return alive;
     }
-
     public void setAlive(boolean alive) {
-        //сеттер маркера жизни лутбокса. Если торпеда попала в лутбокс, она его уничтожает
+        //Сеттер маркера жизни лутбокса. Если торпеда попала в лутбокс, она его уничтожает,
         //точнее делает пометку, что не живой
-        this.alive = false;
+        this.alive = alive;
     }
 }

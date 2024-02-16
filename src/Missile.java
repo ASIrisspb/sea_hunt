@@ -2,7 +2,7 @@ import java.util.Arrays;
 
 public class Missile {
     //класс для реализации торпед
-    private int speed = 1; //Скорость торпеды. В нашем случае это количество клеток, занимаемых торпедой при движении
+    private int speed; //Скорость торпеды. В нашем случае это количество клеток, занимаемых торпедой при движении
     private int x; //координаты торпеды
     private int[] x_old; //старые координаты, чтобы на следующей прорисовке их затирать
     private int y; //координаты торпеды
@@ -54,7 +54,13 @@ public class Missile {
                     Game.fieldGame.getField()[x][y].setObject(this);
                     this.crush = true;
                     System.out.println("Торпеда попала в лутбокс и потопила его, погибнув сама");
-                    eraseOldTrack();
+                    break;
+                } else if (obj instanceof Missile) {
+                    //если попали в другую торпеду (врага)
+                    System.out.println("Торпеды столкнулись, обе погибли");
+                    ((Missile) obj).setCrush(true);
+                    Game.fieldGame.getField()[x][y].setObject(this);
+                    this.crush = true;
                     break;
                 } else {
                     //это действие, если торпеда ничего не встретила и просто идет по пустому полю
@@ -87,6 +93,11 @@ public class Missile {
     public boolean isAlive() {
         return alive;
     }
+
+    public void setCrush(boolean crush) {
+        this.crush = crush;
+    }
+
     @Override
     public String toString() {
         return switch (direction) {
@@ -94,7 +105,7 @@ public class Missile {
             case "6" -> " ⇐ ";
             case "7" -> " ⇑ ";
             case "8" -> " ⇓ ";
-            default -> "!!!";
+            default -> "!!!"; //не должен сработать
         };
     }
 }

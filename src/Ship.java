@@ -8,15 +8,15 @@ public abstract class Ship {
     private int visibleArea = 2; //начальная зона видимости (меняется лутбоксами)
     private int amountMissile = 10; //ограничение количества торпед
     private int currentMissile = 0; //изначальное количество торпед
-    private int speedMissiles = 1; //скорость торпед
+    private int speedMissiles = 2; //скорость торпед
     private ArrayList<Missile> missiles_list = new ArrayList<>();  //комплект снарядов корабля
     public Ship(int x, int y) {
         alive = true;
         this.x = x; //начальная координата корабля
         this.y = y; //начальная координата корабля
         Game.fieldGame.getField()[x][y].setObject(this); //ставим корабль
-        // то есть назначаем текущей клетке наличие объекта.
-        //создаем комплект снарядов в количестве amountMissle
+        // То есть назначаем текущей клетке наличие объекта.
+        // Создаем комплект снарядов в количестве amountMissile
         for (int i = 0; i < amountMissile; i++) {
             missiles_list.add(null);
         }
@@ -52,8 +52,10 @@ public abstract class Ship {
         //меньше обоймы (но ее можно пополнять через лутбоксы)
         if (currentMissile < amountMissile) {
             //если можем запустить торпеду, то перебираем список торпед
+            int count = 1;
             for (int i = 0; i < missiles_list.size(); i++) {
                 //если в списке есть нул, то значит есть место для торпеды, которую можно запустить
+                count++;
                 if (missiles_list.get(i) == null) {
                     //нашли нул, вместо него создаем новую торпеду с координатами корабля
                     missiles_list.set(i, new Missile(x, y, direction, speedMissiles));
@@ -62,6 +64,7 @@ public abstract class Ship {
                     break;
                 }
             }
+//            if ()
         } else System.out.println("Торпеды закончились");
     }
     public void missileTrack() {
@@ -81,10 +84,11 @@ public abstract class Ship {
             }
         }
     }
-    public int getSpeedMissiles() {
-        return speedMissiles;
-    }
     public void setSpeedMissiles(int addition) {
         speedMissiles += addition;
+    }
+    public void setCurrentMissile(int currentMissile) {
+        //прибавляем (точнее уменьшаем счетчик выпущенных торпед)
+        this.currentMissile += currentMissile;
     }
 }
