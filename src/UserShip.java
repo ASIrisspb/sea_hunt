@@ -1,6 +1,8 @@
 public class UserShip extends Ship{
     public UserShip(int x, int y) {
         super(x, y);
+//для тестов, чтобы видеть все поле, а ПК видит как обычно. УДАЛИТЬ ПОСЛЕ РЕЛИЗА!
+        setVisibleArea(15);
     }
     @Override
     public String toString() {
@@ -59,8 +61,6 @@ public class UserShip extends Ship{
             }
             //если там корабль врага, то оба погибают
             if (object instanceof PC_Ship) {
-                //открываем все поле
-                this.setVisibleArea(Game.fieldGame.getRange());
                 //помечаем наш корабль потопленным
                 this.setAlive(false);
                 //помечаем корабль врага также потопленным
@@ -68,7 +68,7 @@ public class UserShip extends Ship{
             }
         }
         //метод постановки корабля на клетку или его снятия с неё
-        Game.fieldGame.getField()[x][y].setObject(obj); //объект или null
+        Game.fieldGame.getField()[x][y].setObject(obj); //ставим объект на клетку
         Game.fieldGame.getField()[x][y].setVisible(visible); //видимость
     }
     public void view (boolean isView) {

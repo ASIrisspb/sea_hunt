@@ -13,23 +13,25 @@ import java.util.ArrayList;
 public class Game {
     static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     static String userWord; //для ввода пользователем
-    static String menuMove = "Сделайте свой ход, выбрав пункт меню: " +
-            "1 - вправо, 2 - влево, 3 - вверх, 4 - вниз \n" +
-            "Либо выпусти торпеду, отправив ее: 5 - вправо, 6 - влево, 7 - вверх, 8 - вниз";
+    static String menuMove = """
+            Сделайте свой ход, выбрав пункт меню:
+            1 - вправо, 2 - влево, 3 - вверх, 4 - вниз (любое другое значение оставит корабль на месте),
+            либо выпусти торпеду, отправив ее: 5 - вправо, 6 - влево, 7 - вверх, 8 - вниз""";
     static boolean isLoop = true; //для возможных циклов
     static int minRangeField = 10; //минимальный размер поля
     static int maxRangeField = 20; //максимальный размер поля
     static FieldGame fieldGame;
-    static int range = 14; //размерность поля от пользователя
+    static int range = 12; //размерность поля от пользователя
     static ArrayList<Lootbox> lootbox_list = new ArrayList<>(); //набор (список) лутбоксов
     public static void main(String[] args) throws IOException {
         //вступление и описание
         System.out.println("""
-                Приветствую в игре \"Морской охотник\" - тут тебе нужно найти и уничтожить врага (\u001b[31m■\u001b[0m).
+                Приветствую в игре "Морской охотник" - тут тебе нужно найти и уничтожить врага (\u001b[31m■\u001b[0m).
                 Ты сам - (\u001b[32m■\u001b[0m). В игре есть туман войны - твоя зона видимости отмечена точками.
                 (\u001b[33m◊\u001b[0m) - это лутбоксы, они дают какой-то бонус.
                 За ход ты можешь либо переместиться, либо сделать выстрел. Меню действий будет выводиться.
-                Чтобы получить бонус - наступи на лутбок, но если ты наступишь на врага - вы оба погибните""");
+                Чтобы получить бонус - "наступи" на лутбок, но если ты "наступишь" на врага - вы оба погибните.
+                Ты также погибнешь, если "натупишь" на торпеду (изображаются стрелками)""");
 
         //выбор размера поля
 //        while (isLoop) {
@@ -65,10 +67,7 @@ public class Game {
         PC_Ship enemy = new PC_Ship(enemyX_initial,enemyY_initial);
 
         //определяем количество лутбоксов
-        int count_lootbox = (int) (Math.pow(range, 2) /
-                 (Math.pow(Lootbox.getDensity() * 2 + 1, 2)));
-
-
+        int count_lootbox = (int) (Math.pow(range, 2) / (Math.pow(Lootbox.getDensity() * 2 + 1, 2)));
 
         //игровой цикл
         while (true) {
@@ -76,27 +75,35 @@ public class Game {
             if (lootbox_list.size() < count_lootbox) {
                 //заполняем список лутбоксов, если их меньше заданного числа
                 for (int i = lootbox_list.size(); i < count_lootbox; i++) {
-//ВАЖНО! в конструкторе лутбокса есть цикл, если игра зависла,
-// то возможно причина в том, что не может найти место для лутбокса
+/*ВАЖНО! в конструкторе лутбокса есть цикл, если игра зависла, то, возможно, причина в том,
+что не может найти место для лутбокса */
                     lootbox_list.add(new Lootbox());
                 }
             }
-            fieldGame.printField();  //рисуем поле (перед ходом игрока)
-            System.out.println(menuMove); //выводим меню действий
+            //рисуем поле (перед ходом игрока)
+            fieldGame.printField();
+
+            //определяем оставшееся количество торпед
+            int restMissile = ourShip.getAmountMissile() - ourShip.getCurrentMissile();
+            //сообщаем пользователю
+            System.out.println("У тебя в запасе " + restMissile + " торпед");
+            //выводим меню действий
+            System.out.println(menuMove);
+            //пользователь делает свой ход
             userWord = reader.readLine();
             //определяем действие игрока
             switch (userWord) {
                 case "1","2","3","4" -> ourShip.shipMove(userWord); //метод передвижения корабля
                 case "5","6","7","8" -> ourShip.pushMissile(userWord); //метод запуска торпед
-                //страховка от глупости игрока
-                default -> System.out.println("Неверный ход! Вы потеряли свой ход и остались на месте");
+                //если игрок решил ничего не делать
+                default -> System.out.println("Корабль остался на месте");
             }
             //метод отрисовки запущенных торпед
             ourShip.missileTrack();
             //после действия игрока проверяем лутбоксы на предмет использования
             checkLootbox();
 
-/**ДЕЙСТВИЯ КОМПЬЮТЕРА**/
+/* ДЕЙСТВИЯ КОМПЬЮТЕРА */
 
             //после пользователя делает ход компьютер
             enemy.shipMove("");
@@ -105,8 +112,8 @@ public class Game {
             //после хода компьютера проверяем лутбоксы на предмет использования
             checkLootbox();
 
-
-            /** Проверка окончания игры!!!**/
+/* Проверка окончания игры!!! */
+            //оба игрока сделали свои ходы, теперь проверяем их результат
             if (!ourShip.isAlive() && !enemy.isAlive()) {
                 System.out.println("Ничья - оба погибли");
                 break;
@@ -120,7 +127,12 @@ public class Game {
                 break;
             }
         }
-        fieldGame.printField();  //рисуем поле, чтобы нарисовать его в самом конце игры
+        //так как игра закончилась, то открываем делаем видимым все поле
+        ourShip.setVisibleArea(Game.fieldGame.getRange());
+        //и открываем его перед финальной печатью
+        ourShip.view(true);
+        //рисуем поле, чтобы нарисовать его в самом конце игры
+        fieldGame.printField();
     }
 
 
